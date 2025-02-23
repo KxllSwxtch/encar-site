@@ -380,7 +380,7 @@ const SearchForm = () => {
 
 	return (
 		<div className='mb-10'>
-			<div className='flex'>
+			<div className='md:flex'>
 				<form onSubmit={handleSubmit} className='flex flex-col gap-4 p-4'>
 					<div>
 						<label className='block text-gray-700'>Тип авто:</label>
@@ -891,7 +891,6 @@ const SearchForm = () => {
 					<Loader />
 				) : cars.length > 0 ? (
 					<div className='mt-4 container mx-auto flex-1'>
-						<h2 className='text-xl font-bold mb-2'>Список автомобилей:</h2>
 						<ul className='space-y-2 grid grid-cols-1 md:grid-cols-4 gap-4 p-4'>
 							{cars.map((car) => (
 								<CarCard car={car} key={car.Id} />
