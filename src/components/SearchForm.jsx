@@ -309,6 +309,8 @@ const SearchForm = () => {
 		return pages
 	}
 
+	console.log(generations)
+
 	const handleCarTypeChange = (e) => {
 		setCarType(e.target.value)
 		setBrands([])
@@ -457,7 +459,9 @@ const SearchForm = () => {
 																		</li>
 																		{generations
 																			?.sort((a, b) =>
-																				a.value > b.value ? -1 : 1,
+																				a.model_start_date > b.model_start_date
+																					? -1
+																					: 1,
 																			)
 																			.map((genItem) => (
 																				<li
@@ -471,7 +475,19 @@ const SearchForm = () => {
 																						)
 																					}
 																				>
-																					{genItem.value}
+																					{genItem.value} (
+																					{genItem.model_start_date.substring(
+																						2,
+																						4,
+																					)}{' '}
+																					-{' '}
+																					{genItem.model_end_date
+																						? genItem.model_end_date.substring(
+																								2,
+																								4,
+																						  )
+																						: 'н.в'}
+																					)
 																					<span className='text-gray-600'>
 																						{generation === genItem.value
 																							? '-'
