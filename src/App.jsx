@@ -1,11 +1,14 @@
-import Navbar from './components/Navbar'
-import SearchForm from './components/SearchForm'
+import { Routes, Route } from 'react-router-dom'
+import { Navbar, SearchForm, CarDetails } from './components'
 
 function App() {
 	return (
 		<div>
 			<Navbar />
-			<SearchForm />
+			<Routes>
+				<Route path='/' element={<SearchForm />} />
+				<Route path='/car/:carId' element={<CarDetails />} />
+			</Routes>
 		</div>
 	)
 }

@@ -624,7 +624,7 @@ const SearchForm = () => {
 								className='border rounded p-2 w-full'
 								name='year_from'
 							>
-								{filteredYearsFrom.map((year) => (
+								{filteredYearsFrom.reverse().map((year) => (
 									<option key={year} value={year}>
 										{year}
 									</option>
@@ -645,7 +645,7 @@ const SearchForm = () => {
 								className='border rounded p-2 w-full'
 								name='year_to'
 							>
-								{filteredYearsTo.map((year) => (
+								{filteredYearsTo.reverse().map((year) => (
 									<option key={year} value={year}>
 										{year}
 									</option>

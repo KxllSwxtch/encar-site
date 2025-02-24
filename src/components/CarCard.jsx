@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 const CarCard = ({ car }) => {
 	const manufacturer = car?.Manufacturer
@@ -27,12 +28,18 @@ const CarCard = ({ car }) => {
 			<p>Дата регистрации: {formattedYear}</p>
 			<p>Цена: {formattedCarPrice}</p>
 			<p>Пробег: {formattedCarMileage} км</p>
+			<Link to={`/car/${car.Id}`} target='_blank'>
+				<button className='mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition cursor-pointer w-full'>
+					Подробнее
+				</button>
+			</Link>
 		</div>
 	)
 }
 
 CarCard.propTypes = {
 	car: PropTypes.shape({
+		Id: PropTypes.number.isRequired,
 		Model: PropTypes.string.isRequired,
 		Badge: PropTypes.string.isRequired,
 		BadgeDetail: PropTypes.string.isRequired,
