@@ -155,6 +155,7 @@ const SearchForm = () => {
 			color,
 			car_number: carNumber,
 			page: currentPage,
+			limit: 20,
 		})
 	}, [
 		carType,
@@ -309,8 +310,6 @@ const SearchForm = () => {
 		return pages
 	}
 
-	console.log(generations)
-
 	const handleCarTypeChange = (e) => {
 		setCarType(e.target.value)
 		setBrands([])
@@ -318,6 +317,9 @@ const SearchForm = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
+
+		window.scrollTo({ behavior: 'smooth', top: 0, left: 0 })
+
 		getCars({
 			car_type: carType,
 			brand,
@@ -338,6 +340,7 @@ const SearchForm = () => {
 			color,
 			car_number: carNumber,
 			page: currentPage,
+			limit: 20,
 		})
 	}
 
@@ -397,7 +400,7 @@ const SearchForm = () => {
 					</div>
 
 					<div>
-						<ul className='border rounded p-2 w-full max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200'>
+						<ul className='border rounded p-2 w-full max-h-100 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200'>
 							{brands?.map((item) => (
 								<li
 									key={item.value}
@@ -464,56 +467,49 @@ const SearchForm = () => {
 																					: 1,
 																			)
 																			.map((genItem) => (
-																				<li
-																					key={genItem.value}
-																					className='cursor-pointer p-2 hover:bg-gray-100 flex justify-between items-center'
-																					onClick={() =>
-																						setGeneration(
-																							generation === genItem.value
-																								? ''
-																								: genItem.value,
+																				<>
+																					<li
+																						key={genItem.value}
+																						className='cursor-pointer p-2 hover:bg-gray-100 flex justify-between'
+																						onClick={() =>
+																							setGeneration(
+																								generation === genItem.value
+																									? ''
+																									: genItem.value,
+																							)
+																						}
+																					>
+																						{genItem.value} (
+																						{genItem.model_start_date.substring(
+																							2,
+																							4,
+																						)}{' '}
+																						-{' '}
+																						{genItem.model_end_date
+																							? genItem.model_end_date.substring(
+																									2,
+																									4,
+																							  )
+																							: 'н.в'}
 																						)
-																					}
-																				>
-																					{genItem.value} (
-																					{genItem.model_start_date.substring(
-																						2,
-																						4,
-																					)}{' '}
-																					-{' '}
-																					{genItem.model_end_date
-																						? genItem.model_end_date.substring(
-																								2,
-																								4,
-																						  )
-																						: 'н.в'}
-																					)
-																					<span className='text-gray-600'>
-																						{generation === genItem.value
-																							? '-'
-																							: '+'}
-																					</span>
-																				</li>
-																			))}
+																						<span className='text-gray-600'>
+																							{generation === genItem.value
+																								? '-'
+																								: '+'}
+																						</span>
+																					</li>
 
-																		{brand === item.value &&
-																			model &&
-																			generation && (
-																				<ul className='pl-4 border-l ml-2'>
-																					{/* Если тип топлива выбран, показываем только его */}
-																					{fuelDrivetrain
-																						? fuelDrivetrains
-																								.filter(
-																									(fuelItem) =>
-																										fuelItem.value ===
-																										fuelDrivetrain,
-																								)
-																								.map((fuelItem) => (
-																									<li
-																										key={fuelItem.value}
-																										className='border-b last:border-none'
-																									>
-																										<div
+																					{generation === genItem.value && (
+																						<ul className='pl-8 mt-1 space-y-1'>
+																							<li className='font-bold text-gray-700 mb-1'>
+																								Объём и тип топлива:
+																							</li>
+																							{fuelDrivetrains?.map(
+																								(fuelItem) => (
+																									<>
+																										<li
+																											key={fuelItem.value}
+																											className='cursor-pointer hover:bg-gray-100 p-2 rounded flex justify-between'
 																											onClick={() =>
 																												setFuelDrivetrain(
 																													fuelDrivetrain ===
@@ -522,12 +518,6 @@ const SearchForm = () => {
 																														: fuelItem.value,
 																												)
 																											}
-																											className={`cursor-pointer flex justify-between items-center p-2 ${
-																												fuelDrivetrain ===
-																												fuelItem.value
-																													? 'text-green-600 font-bold'
-																													: ''
-																											}`}
 																										>
 																											{fuelItem.value}
 																											<span className='text-gray-600'>
@@ -536,13 +526,12 @@ const SearchForm = () => {
 																													? '-'
 																													: '+'}
 																											</span>
-																										</div>
+																										</li>
 
-																										{/* Вложенный список комплектаций */}
 																										{fuelDrivetrain ===
 																											fuelItem.value && (
-																											<ul className='pl-4 border-l ml-2 max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200'>
-																												<li className='font-bold text-gray-700 mb-2'>
+																											<ul className='pl-12 mt-1 space-y-1'>
+																												<li className='font-bold text-gray-700 mb-1'>
 																													Комплектация:
 																												</li>
 																												{trims?.map(
@@ -551,7 +540,7 @@ const SearchForm = () => {
 																															key={
 																																trimItem.value
 																															}
-																															className='cursor-pointer p-2 hover:bg-gray-100 flex justify-between items-center'
+																															className='cursor-pointer hover:bg-gray-100 p-2 rounded flex justify-between'
 																															onClick={() =>
 																																setTrim(
 																																	trim ===
@@ -573,44 +562,13 @@ const SearchForm = () => {
 																												)}
 																											</ul>
 																										)}
-																									</li>
-																								))
-																						: // Если топливо не выбрано, показываем все типы топлива
-																						  fuelDrivetrains?.map(
-																								(fuelItem) => (
-																									<li
-																										key={fuelItem.value}
-																										className='border-b last:border-none'
-																									>
-																										<div
-																											onClick={() =>
-																												setFuelDrivetrain(
-																													fuelDrivetrain ===
-																														fuelItem.value
-																														? ''
-																														: fuelItem.value,
-																												)
-																											}
-																											className={`cursor-pointer flex justify-between items-center p-2 ${
-																												fuelDrivetrain ===
-																												fuelItem.value
-																													? 'text-green-600 font-bold'
-																													: ''
-																											}`}
-																										>
-																											{fuelItem.value}
-																											<span className='text-gray-600'>
-																												{fuelDrivetrain ===
-																												fuelItem.value
-																													? '-'
-																													: '+'}
-																											</span>
-																										</div>
-																									</li>
+																									</>
 																								),
-																						  )}
-																				</ul>
-																			)}
+																							)}
+																						</ul>
+																					)}
+																				</>
+																			))}
 																	</ul>
 																)}
 															</li>
@@ -922,7 +880,10 @@ const SearchForm = () => {
 				{/* Кнопка "Предыдущая" */}
 				<button
 					disabled={currentPage === 1}
-					onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+					onClick={() => {
+						setCurrentPage((prev) => Math.max(prev - 1, 1))
+						window.scrollTo({ behavior: 'smooth', top: 0, left: 0 })
+					}}
 					className='px-3 py-1 border rounded disabled:opacity-50'
 				>
 					Предыдущая
@@ -932,7 +893,10 @@ const SearchForm = () => {
 				{getPaginationGroup().map((page) => (
 					<button
 						key={page}
-						onClick={() => setCurrentPage(page)}
+						onClick={() => {
+							setCurrentPage(page)
+							window.scrollTo({ behavior: 'smooth', top: 0, left: 0 })
+						}}
 						className={`px-3 py-1 border rounded ${
 							currentPage === page
 								? 'bg-blue-500 text-white'
@@ -946,9 +910,10 @@ const SearchForm = () => {
 				{/* Кнопка "Следующая" */}
 				<button
 					disabled={currentPage === totalPages}
-					onClick={() =>
+					onClick={() => {
 						setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-					}
+						window.scrollTo({ behavior: 'smooth', top: 0, left: 0 })
+					}}
 					className='px-3 py-1 border rounded disabled:opacity-50'
 				>
 					Следующая
