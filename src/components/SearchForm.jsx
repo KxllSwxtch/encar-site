@@ -183,8 +183,8 @@ const SearchForm = () => {
 		const fetchBrands = async () => {
 			const url =
 				carType === 'Y'
-					? 'https://encar-api-386c41474ec8.herokuapp.com/api/brands/korean'
-					: 'https://encar-api-386c41474ec8.herokuapp.com/api/brands/foreign'
+					? 'http://localhost:8000/api/brands/korean'
+					: 'http://localhost:8000/api/brands/foreign'
 
 			try {
 				const response = await fetch(url)
@@ -206,7 +206,7 @@ const SearchForm = () => {
 	useEffect(() => {
 		const fetchModels = async () => {
 			if (brand) {
-				const url = `https://encar-api-386c41474ec8.herokuapp.com/api/models/${brand}?car_type=${carType}`
+				const url = `http://localhost:8000/api/models/${brand}?car_type=${carType}`
 
 				try {
 					const response = await fetch(url)
@@ -229,7 +229,7 @@ const SearchForm = () => {
 	useEffect(() => {
 		const fetchGenerations = async () => {
 			if (model) {
-				const url = `https://encar-api-386c41474ec8.herokuapp.com/api/models/${brand}/${model}?car_type=${carType}`
+				const url = `http://localhost:8000/api/models/${brand}/${model}?car_type=${carType}`
 
 				try {
 					const response = await fetch(url)
@@ -252,7 +252,7 @@ const SearchForm = () => {
 	useEffect(() => {
 		const fetchFuelDrivetrains = async () => {
 			if (generation) {
-				const url = `https://encar-api-386c41474ec8.herokuapp.com/api/fuel_drivetrains/${brand}/${model}/${generation}?car_type=${carType}`
+				const url = `http://localhost:8000/api/fuel_drivetrains/${brand}/${model}/${generation}?car_type=${carType}`
 
 				try {
 					const response = await fetch(url)
@@ -278,7 +278,7 @@ const SearchForm = () => {
 	useEffect(() => {
 		const fetchTrims = async () => {
 			if (fuelDrivetrain) {
-				const url = `https://encar-api-386c41474ec8.herokuapp.com/api/trims/${brand}/${model}/${generation}/${fuelDrivetrain}?car_type=${carType}`
+				const url = `http://localhost:8000/api/trims/${brand}/${model}/${generation}/${fuelDrivetrain}?car_type=${carType}`
 
 				try {
 					const response = await fetch(url)
@@ -385,7 +385,7 @@ const SearchForm = () => {
 
 	return (
 		<div className='mb-10'>
-			<div className='md:flex'>
+			<div className='m-auto'>
 				<form onSubmit={handleSubmit} className='flex flex-col gap-4 p-4'>
 					<div>
 						<label className='block text-gray-700'>Тип авто:</label>
@@ -705,7 +705,7 @@ const SearchForm = () => {
 						</div>
 					</div>
 
-					<div className='flex gap-4'>
+					<div className='grid grid-cols-2 gap-4'>
 						<div>
 							<label className='block text-gray-700'>Пробег от:</label>
 							<select
@@ -751,7 +751,7 @@ const SearchForm = () => {
 						</div>
 					</div>
 
-					<div className='flex gap-4'>
+					<div className='grid grid-cols-2 gap-4'>
 						<div>
 							<label className='block text-gray-700'>Цена от (만원):</label>
 							<select
@@ -847,21 +847,9 @@ const SearchForm = () => {
 							))}
 						</select>
 					</div>
-
-					<div>
-						<label className='block text-gray-700'>Номер автомобиля:</label>
-						<input
-							type='text'
-							value={carNumber}
-							onChange={handleCarNumberChange}
-							placeholder='Пример: 381주7405'
-							className='border rounded p-2 w-full'
-							name='car_number'
-						/>
-					</div>
 				</form>
 
-				{loading ? (
+				{/* {loading ? (
 					<Loader />
 				) : cars.length > 0 ? (
 					<div className='mt-4 container mx-auto flex-1'>
@@ -873,11 +861,10 @@ const SearchForm = () => {
 					</div>
 				) : (
 					<p>Автомобили не найдены</p>
-				)}
+				)} */}
 			</div>
 
-			<div className='flex justify-center items-center space-x-2 mt-4'>
-				{/* Кнопка "Предыдущая" */}
+			{/* <div className='flex justify-center items-center space-x-2 mt-4'>
 				<button
 					disabled={currentPage === 1}
 					onClick={() => {
@@ -889,7 +876,6 @@ const SearchForm = () => {
 					Предыдущая
 				</button>
 
-				{/* Номера страниц */}
 				{getPaginationGroup().map((page) => (
 					<button
 						key={page}
@@ -907,7 +893,6 @@ const SearchForm = () => {
 					</button>
 				))}
 
-				{/* Кнопка "Следующая" */}
 				<button
 					disabled={currentPage === totalPages}
 					onClick={() => {
@@ -918,7 +903,7 @@ const SearchForm = () => {
 				>
 					Следующая
 				</button>
-			</div>
+			</div> */}
 		</div>
 	)
 }

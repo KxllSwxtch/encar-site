@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const API_URL = 'https://encar-api-386c41474ec8.herokuapp.com/api'
+// const API_URL = 'https://encar-api-386c41474ec8.herokuapp.com/api'
+const API_URL = 'http://localhost:8000/api'
 
 export const fetchCars = async (params) => {
 	try {
