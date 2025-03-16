@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import { useState, useEffect } from 'react'
+import { initDataUnsafe } from '@twa-dev/sdk'
 import CarCard from './CarCard'
 import Loader from './Loader'
 import { fetchCars } from '../api/cars'
@@ -58,6 +59,8 @@ const fuelTypeOptions = {
 }
 
 const SearchForm = () => {
+	const [userId, setUserId] = useState(null)
+
 	const [currentPage, setCurrentPage] = useState(1) // Текущая страница
 	const [totalPages, setTotalPages] = useState(1) // Общее количество страниц
 
@@ -99,19 +102,6 @@ const SearchForm = () => {
 	const [trims, setTrims] = useState([]) // Список комплектаций
 	const [trim, setTrim] = useState('') // Выбранная комплектация// Получение списка марок при изменении carType
 
-	const validateCarNumber = (number) => {
-		// Корейский номер авто (пример: 381주7405)
-		const koreanCarNumberRegex = /^[0-9]{0,3}[가-힣]{0,1}[0-9]{0,4}$/
-		return koreanCarNumberRegex.test(number)
-	}
-
-	const handleCarNumberChange = (e) => {
-		const value = e.target.value
-		if (validateCarNumber(value)) {
-			setCarNumber(value)
-		}
-	}
-
 	const getCars = async (searchParams) => {
 		setLoading(true)
 
@@ -133,6 +123,12 @@ const SearchForm = () => {
 			setLoading(false)
 		}
 	}
+
+	useEffect(() => {
+		if (initDataUnsafe?.user) {
+			setUserId(initDataUnsafe.user.id)
+		}
+	}, [])
 
 	useEffect(() => {
 		getCars({
@@ -298,29 +294,17 @@ const SearchForm = () => {
 		fetchTrims()
 	}, [fuelDrivetrain, generation, model, brand, carType]) // Выполняется при изменении fuelDrivetrain, generation, model, brand или carType
 
-	const getPaginationGroup = () => {
-		const start = Math.max(1, currentPage - 2)
-		const end = Math.min(totalPages, currentPage + 2)
-		const pages = []
-
-		for (let i = start; i <= end; i++) {
-			pages.push(i)
-		}
-
-		return pages
-	}
-
 	const handleCarTypeChange = (e) => {
 		setCarType(e.target.value)
 		setBrands([])
 	}
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault()
 
 		window.scrollTo({ behavior: 'smooth', top: 0, left: 0 })
 
-		getCars({
+		const searchParams = {
 			car_type: carType,
 			brand,
 			model_group: model,
@@ -341,7 +325,25 @@ const SearchForm = () => {
 			car_number: carNumber,
 			page: currentPage,
 			limit: 20,
-		})
+		}
+
+		try {
+			const response = await fetch('http://localhost:8000/api/subscribe', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(searchParams),
+			})
+
+			if (response.ok) {
+				console.log('Запрос успешно отправлен!')
+			} else {
+				console.error('Ошибка при отправке запроса:', response.status)
+			}
+		} catch (error) {
+			console.error('Ошибка запроса:', error)
+		}
 	}
 
 	// Список лет от минимального года до текущего
@@ -466,10 +468,10 @@ const SearchForm = () => {
 																					? -1
 																					: 1,
 																			)
-																			.map((genItem) => (
+																			.map((genItem, i) => (
 																				<>
 																					<li
-																						key={genItem.value}
+																						key={i}
 																						className='cursor-pointer p-2 hover:bg-gray-100 flex justify-between'
 																						onClick={() =>
 																							setGeneration(
@@ -847,6 +849,13 @@ const SearchForm = () => {
 							))}
 						</select>
 					</div>
+
+					<button
+						onClick={handleSubmit}
+						className='bg-red-500 hover:bg-red-600 text-white p-2 rounded-sm transition-colors duration-300 cursor-pointer'
+					>
+						Начать поиск автомобилей
+					</button>
 				</form>
 
 				{/* {loading ? (
